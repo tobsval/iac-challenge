@@ -1,6 +1,6 @@
 ---
 
-- name: Network Getting Started First Playbook
+- name: Testing Playbook for Travis CI running Ansible Lint
   connection: ansible.netcommon.network_cli
   gather_facts: false
   hosts: all
