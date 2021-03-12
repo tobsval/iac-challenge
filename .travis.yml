@@ -4,5 +4,6 @@ services:
 before_install:
   - docker pull cytopia/ansible-lint
 
-install:
-  - docker run cytopia/ansible-lint /playbooks/*.yml
+script:
+  - ls
+  - docker run cytopia/ansible-lint *.yml
