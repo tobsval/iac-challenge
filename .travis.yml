@@ -1,9 +1,8 @@
+services:
+  - docker
+
+before_install:
+  - docker pull cytopia/ansible-lint
+
 install:
-  - sudo apt-get install ansible-lint
-
-script:
-  - ansible-lint /playbook/*.yml
-
-branches:
-  only:
-  - master
+  - docker run cytopia/ansible-lint /playbooks/*.yml
