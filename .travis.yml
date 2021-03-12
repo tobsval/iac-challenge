@@ -1,11 +1,8 @@
-language: python
-python:
-- "3.6"
-virtualenv:
-  system_site_packages: true
+before-install:
+  - yum update && yum upgrade
 
 install:
-  - pip install ansible-lint
+  - yum install ansible-lint
 
 script:
   - ansible-lint /playbook/*.yml
