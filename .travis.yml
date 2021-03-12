@@ -1,8 +1,8 @@
 before-install:
-  - yum update && yum upgrade
+  - apt-get update && apt-get upgrade
 
 install:
-  - yum install ansible-lint
+  - apt-get install ansible-lint
 
 script:
   - ansible-lint /playbook/*.yml
