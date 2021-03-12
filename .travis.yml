@@ -4,3 +4,6 @@ install:
   - ansible-lint --version
 script:
   - ansible-lint ./playbooks
+branches:
+  only:
+  - master
