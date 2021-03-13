@@ -6,5 +6,4 @@ before_install:
 
 script:
   - ls
-  - docker run --rm -v $(pwd):/data cytopia/ansible-lint vm-configure.yml
   - docker run --rm -v $(pwd):/data cytopia/ansible-lint playbooks/*.yml

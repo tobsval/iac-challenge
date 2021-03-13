@@ -1,6 +1,5 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
-  #config.vm.provision "ansible", playbook: "vm-configure.yml"
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048" # 2GB+ required by CentOS to boot
@@ -16,4 +15,7 @@ Vagrant.configure("2") do |config|
     docker2.vm.hostname = "docker2"
     docker2.vm.network "private_network", ip: "192.168.10.101"
   end
+
+  config.vm.provision "ansible_local", playbook: "playbooks/vm-configure.yml"
+
 end
