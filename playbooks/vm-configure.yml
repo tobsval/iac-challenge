@@ -2,26 +2,31 @@
   hosts: all
   gather_facts: false
   tasks:
-  - name: Install dependencies needed by next tasks
-    command: ansible-galaxy collection install community.general
-    register: cmd_res
-    changed_when: "cmd_res.rc != 2"
+  - name: Get main block device size
+    shell: parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB
+    register: parted_cmd_res
+    changed_when: "parted_cmd_res.rc != 2"
 
-  - name: Reduce boot fs
-    command: resize2fs /dev/sda1 10GB
-    register: cmd_res
-    changed_when: "cmd_res.rc != 2"
+  - name: Block device size check (Fail if under 40GB)
+    fail:
+      msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's interface"
+    when: parted_cmd_res.stdout < 40
 
-  - name: Create docker partition
-    community.general.parted:
-      device: /dev/sda
-      number: 2
-      part_start: 51%
-      part_end: 90%
-    become: true
+  - name: Add Docker repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docer-ce.repo
+    become: yes
 
-  - name: Label new partition
-    command: "e2label /dev/sda2 /docker"
-    register: cmd_res
-    changed_when: "cmd_res.rc != 2"
-    become: true
+  - name: Install latest version of Docker
+    yum:
+      name: docker-ce
+      state: latest
+    become: yes
+
+  - name: Start Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    become: yes
