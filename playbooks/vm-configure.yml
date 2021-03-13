@@ -1,22 +1,27 @@
 - name: Configure docker swarm virtual machine
   hosts: all
   gather_facts: false
-  become: true
   tasks:
   - name: Install dependencies needed by next tasks
     command: ansible-galaxy collection install community.general
     register: cmd_res
     changed_when: "cmd_res.rc != 2"
 
-  - name: Partition and format
+  - name: Reduce boot fs
+    command: resize2fs /dev/sda1 10GB
+    register: cmd_res
+    changed_when: "cmd_res.rc != 2"
+
+  - name: Create docker partition
     community.general.parted:
       device: /dev/sda
       number: 2
-      state: present
-      fs_type: ext4
-      part_start: 1GB
+      part_start: 51%
+      part_end: 90%
+    become: true
 
   - name: Label new partition
     command: "e2label /dev/sda2 /docker"
     register: cmd_res
     changed_when: "cmd_res.rc != 2"
+    become: true
