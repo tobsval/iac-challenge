@@ -5,3 +5,5 @@
   tasks:
   - name: Install community.general galaxy collection
     command: ansible-galaxy collection install community.general
+  - name: Partition and format VM
+    import_tasks: vm-docker-part.yml
