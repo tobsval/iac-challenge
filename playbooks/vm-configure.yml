@@ -13,21 +13,5 @@
             (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's interface"
     when: parted_cmd_res.stdout < 40
 
-  - name: Add Docker repo
-    get_url:
-      url: https://download.docker.com/linux/centos/docker-ce.repo
-      dest: /etc/yum.repos.d/docer-ce.repo
-    become: yes
-
-  - name: Install latest version of Docker
-    yum:
-      name: docker-ce-20.10.5
-      state: present
-    become: yes
-
-  - name: Start Docker service
-    service:
-      name: docker
-      state: started
-      enabled: yes
-    become: yes
+  - name: Execute docker deployment
+    import_playbook: vm-docker-deploy.yml
