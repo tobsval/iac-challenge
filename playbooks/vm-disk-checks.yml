@@ -1,9 +1,9 @@
 ---
-- name: Configure docker swarm virtual machine
+- name: VM disk checks
   hosts: all
   tasks:
   - name: Get main block device size
-    shell: parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB && set -o pipefail
+    shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB 2>/dev/null
     register: parted_cmd_res
     changed_when: "parted_cmd_res.rc != 2"
 
