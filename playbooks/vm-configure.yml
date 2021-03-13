@@ -20,8 +20,3 @@
     command: "e2label /dev/sda2 /docker"
     register: cmd_res
     changed_when: "cmd_res.rc != 2"
-
-  - name: Mount new partition
-    command: "mount /docker"
-    register: cmd_res
-    changed_when: "cmd_res.rc != 2"
