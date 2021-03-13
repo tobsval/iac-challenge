@@ -3,7 +3,7 @@
   gather_facts: false
   tasks:
   - name: Get main block device size
-    shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB
+    shell: parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB && set -o pipefail
     register: parted_cmd_res
     changed_when: "parted_cmd_res.rc != 2"
 
@@ -13,5 +13,4 @@
             (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's GUI"
     when: parted_cmd_res.stdout < 40
 
-  - name: Execute docker deployment
-    include_tasks: vm-docker-deploy.yml
+  - import_playbook: vm-docker-deploy.yml

@@ -1,3 +1,4 @@
+---
 - name: Configure docker
   hosts: all
   gather_facts: false
@@ -8,7 +9,7 @@
       dest: /etc/yum.repos.d/docer-ce.repo
     become: yes
 
-  - name: Install latest version of Docker
+  - name: Install docker-ce v20.10.5
     yum:
       name: docker-ce-20.10.5
       state: present
