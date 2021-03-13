@@ -16,6 +16,11 @@ Vagrant.configure("2") do |config|
     docker2.vm.network "private_network", ip: "192.168.10.101"
   end
 
-  config.vm.provision "ansible_local", playbook: "playbooks/vm-configure.yml"
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "playbooks/vm-configure.yml"
+    ansible.install_mode = "pip"
+    ansible.pip_install_cmd = "curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python"
+    ansible.version = "latest"
+  end
 
 end

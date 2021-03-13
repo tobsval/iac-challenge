@@ -3,9 +3,25 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Install community.general galaxy collection
-    command: ansible-galaxy collection install community.
+  - name: Install dependencies needed by next tasks
+    command: ansible-galaxy collection install community.general
     register: cmd_res
     changed_when: "cmd_res.rc != 2"
-  - name: Partition and format VM
-    import_tasks: vm-docker-part.yml
+
+  - name: Partition and format
+    community.general.parted:
+      device: /dev/sda
+      number: 2
+      state: present
+      fs_type: ext4
+      part_start: 1GB
+
+  - name: Label new partition
+    command: "e2label /dev/sda2 /docker"
+    register: cmd_res
+    changed_when: "cmd_res.rc != 2"
+
+  - name: Mount new partition
+    command: "mount /docker"
+    register: cmd_res
+    changed_when: "cmd_res.rc != 2"
