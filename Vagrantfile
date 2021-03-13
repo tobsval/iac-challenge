@@ -4,6 +4,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048" # 2GB+ required by CentOS to boot
+    vb.cpus = "2"
   end
 
   config.vm.define "docker1" do |docker1|
