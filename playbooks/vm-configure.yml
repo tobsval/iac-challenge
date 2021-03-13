@@ -4,6 +4,8 @@
   become: true
   tasks:
   - name: Install community.general galaxy collection
-    command: ansible-galaxy collection install community.general
+    command: ansible-galaxy collection install community.
+    register: cmd_res
+    changed_when: "cmd_res.rc != 2"
   - name: Partition and format VM
     import_tasks: vm-docker-part.yml
