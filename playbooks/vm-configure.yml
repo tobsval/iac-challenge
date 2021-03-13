@@ -9,7 +9,8 @@
 
   - name: Block device size check (Fail if under 40GB)
     fail:
-      msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's interface"
+      msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile \
+            (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's interface"
     when: parted_cmd_res.stdout < 40
 
   - name: Add Docker repo
