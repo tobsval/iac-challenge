@@ -3,10 +3,5 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Partition and format
-    community.general.parted:
-      device: /dev/sda
-      number: 2
-      state: present
-      part_end: 1GB
-      fs_type: ext4
+  - name: Install community.general galaxy collection
+    command: ansible-galaxy collection install community.general
