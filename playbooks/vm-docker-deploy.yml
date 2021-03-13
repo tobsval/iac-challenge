@@ -1,4 +1,8 @@
 ---
+- name: Configure docker
+  hosts: all
+  gather_facts: false
+  tasks:
   - name: Add Docker repo
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
