@@ -1,16 +1,3 @@
-- name: Configure docker swarm virtual machine
-  hosts: all
-  gather_facts: false
-  tasks:
-  - name: Get main block device size
-    shell: parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB && set -o pipefail
-    register: parted_cmd_res
-    changed_when: "parted_cmd_res.rc != 2"
-
-  - name: Block device size check (Fail if under 40GB)
-    fail:
-      msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile \
-            (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's GUI"
-    when: parted_cmd_res.stdout < 40
-
+---
+  - import_playbook: vm-disk-checks.yml
   - import_playbook: vm-docker-deploy.yml
