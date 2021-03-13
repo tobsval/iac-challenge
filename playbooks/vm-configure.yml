@@ -3,7 +3,7 @@
   gather_facts: false
   tasks:
   - name: Get main block device size
-    shell: parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB
+    shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB
     register: parted_cmd_res
     changed_when: "parted_cmd_res.rc != 2"
 
