@@ -1,6 +1,7 @@
 ---
 - name: VM disk checks
   hosts: all
+  gather_facts: false
   tasks:
   - name: Get main block device size
     shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB 2>/dev/null

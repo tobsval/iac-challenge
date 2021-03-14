@@ -1,6 +1,7 @@
 ---
 - name: Configure firewall for restricted access to docker guests
   hosts: all
+  gather_facts: false
   tasks:
   - name: Install epel repo
     yum:
@@ -17,25 +18,33 @@
 
   - name: Enable ufw
     community.general.ufw: state=enabled policy=allow
+    become: yes
 
   - name: Disable default allow input rule
     community.general.ufw: direction=incoming policy=deny
+    become: yes
 
   - name: Allow incoming SSH connections
-    community.general.ufw: rule=allow port=22 proto=tcp
+    community.general.ufw: rule=limit port=22 proto=tcp
+    become: yes
 
   - name: Enable firewall logging and restart ufw
     community.general.ufw: logging=on
     notify:
       - restart ufw
+    become: yes
 
   - name: Restrict network access only to specifiy host set
     community.general.ufw: rule=allow src='{{ item }}'
     with_items:
       - 10.0.0.0/8 # Connection from VM's host
       - 192.168.100.0/24 # Connection between docker guests
+    become: yes
 
   - name: Output ufw rules as a visual recap
-    command: echo $(ufw status)
+    command: ufw status
     register: out
-    changed_when: "cmd_res.rc != 2"
+    changed_when: "out.rc != 2"
+    become: yes
+
+  - debug: var=out.stdout_lines

@@ -1,0 +1,19 @@
+---
+- name: Take necessary steps to secure dockerd
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Install PyOpenSSL
+    pip:
+      name: PyOpenSSL==20.0.1
+
+  - name: Generate CA private key (4096 bits, RSA)
+    community.crypto.openssl_privatekey:
+      path: /etc/ssl/docker-ca-priv.pem
+      cipher: aes256
+
+  - name: Generate CA public key (4096 bits, RSA)
+    community.crypto.openssl_publickey:
+      path: /etc/ssl/docker-ca-pub.pem
+      privatekey_path: path: /etc/ssl/docker-ca-priv.pem
+      cipher: aes256

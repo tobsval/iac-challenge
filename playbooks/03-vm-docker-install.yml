@@ -1,6 +1,7 @@
 ---
 - name: Configure docker
   hosts: all
+  gather_facts: false
   tasks:
   - name: Add Docker repo
     get_url:
@@ -12,11 +13,4 @@
     yum:
       name: docker-ce-20.10.5
       state: present
-    become: yes
-
-  - name: Start Docker service
-    service:
-      name: docker
-      state: started
-      enabled: yes
     become: yes
