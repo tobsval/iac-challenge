@@ -1,3 +1,3 @@
 ---
-  - import_playbook: vm-disk-checks.yml
-  - import_playbook: vm-docker-deploy.yml
+  - import_playbook: playbooks/vm-disk-checks.yml
+  - import_playbook: playbooks/vm-docker-deploy.yml
