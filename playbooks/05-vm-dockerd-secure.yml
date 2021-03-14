@@ -1,5 +1,5 @@
 ---
-- name: Take necessary steps to secure dockerd
+- name: Take necessary steps to secure dockerd over HTTPS
   hosts: all
   become: true
   gather_facts: false
@@ -21,10 +21,27 @@
     community.crypto.openssl_privatekey:
       path: /etc/ssl/docker-srv-priv.pem
 
-  #- name: Generate OpenSSL cert sign request
-  #  community.crypto.openssl_csr:
-  #    path: /etc/ssl/docker-server.csr
-  #    privatekey_path: /etc/ssl/docker-srv-priv.pem
-  #    common_name: #TODO: Add IP addr
+  - name: Obtain IPv4 address of VM
+    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
+    register: out
+    changed_when: "out.rc != 2"
 
-  #- debug: var=hostvars[inventory_hostname][ansible_eth1][ipv4][address]
+  - name: Generate OpenSSL cert sign request
+    community.crypto.openssl_csr:
+      path: /etc/ssl/docker-server.csr
+      privatekey_path: /etc/ssl/docker-srv-priv.pem
+      common_name: "{{ out.stdout }}"
+
+  # TODO: Improve the two tasks below by using ansible's inventory reference to hosts
+  # TODO: Switch from content to templating
+  - name: Create extfile to allow TLS connections between authorized hosts
+    copy:
+      content: "subjectAltName = DNS:docker1,IP:{{ out.stdout }},IP:192.168.100.10,IP:127.0.0.1"
+      dest: /etc/ssl/extfile.txt
+    when: out == 192.168.100.10
+
+  - name: Create extfile to allow TLS connections between authorized hosts
+    copy:
+      content: "subjectAltName = DNS:docker2,IP:{{ out.stdout }},IP:192.168.100.10,IP:127.0.0.1"
+      dest: /etc/ssl/extfile.txt
+    when: out == 192.168.100.11

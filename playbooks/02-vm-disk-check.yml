@@ -1,4 +1,6 @@
 ---
+# Unable to perform any kind of FS shrinking as the CentOS 7 image uses xfs
+# TODO: Perhaps add a secondary block device to dedicate to docker only?
 - name: VM disk checks
   hosts: all
   gather_facts: false
