@@ -15,5 +15,5 @@
   - name: Generate CA public key (4096 bits, RSA)
     community.crypto.openssl_publickey:
       path: /etc/ssl/docker-ca-pub.pem
-      privatekey_path: path: /etc/ssl/docker-ca-priv.pem
+      privatekey_path: /etc/ssl/docker-ca-priv.pem
       cipher: aes256

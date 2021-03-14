@@ -5,7 +5,7 @@ Travis Build: [![Build Status](https://travis-ci.com/tobsval/iac-challenge.svg?b
 Current FW Config:
 ======================================================
 To                         Action      From
---                         ------      ----
+
 SSH                        ALLOW       Anywhere
 224.0.0.251 mDNS           ALLOW       Anywhere
 22/tcp                     ALLOW       Anywhere
