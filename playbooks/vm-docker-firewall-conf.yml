@@ -2,6 +2,12 @@
 - name: Configure firewall for restricted access to docker guests
   hosts: all
   tasks:
+  - name: Install epel repo
+    yum:
+      name: epel-release
+      state: present
+    become: yes
+
   - name: Install ufw
     yum:
       name: ufw
