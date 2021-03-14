@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "playbooks/vm-configure.yml"
+    ansible.playbook = "playbooks/playbook.yml"
     ansible.install_mode = "pip"
     ansible.pip_install_cmd = "curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python"
     ansible.version = "latest"
