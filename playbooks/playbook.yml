@@ -1,3 +1,4 @@
 ---
-  - import_playbook: vm-disk-checks.yml
+  #- import_playbook: vm-disk-check.yml
   - import_playbook: vm-docker-deploy.yml
+  - import_playbook: vm-docker-firewall-conf.yml

@@ -1,0 +1,34 @@
+---
+- name: Configure firewall for restricted access to docker guests
+  hosts: all
+  tasks:
+  - name: Install ufw
+    yum:
+      name: ufw
+      state: present
+      enablerepo: epel
+    become: yes
+
+  - name: Enable ufw
+    community.general.ufw: state=enabled policy=allow
+
+  - name: Disable default allow input rule
+    community.general.ufw: direction=incoming policy=deny
+
+  - name: Allow incoming SSH connections
+    community.general.ufw: rule=allow port=22 proto=tcp
+
+  - name: Enable firewall logging and restart ufw
+    community.general.ufw: logging=on
+    notify:
+      - restart ufw
+
+  - name: Restrict network access only to specifiy host set
+    community.general.ufw: rule=allow src='{{ item }}'
+    with_items:
+      - 10.0.0.0/8 # Connection from VM's host
+      - 192.168.100.0/24 # Connection between docker guests
+
+  - name: Output ufw rules as a visual recap
+    command: echo $(ufw status)
+    register: out

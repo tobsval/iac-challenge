@@ -8,12 +8,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "docker1" do |docker1|
     docker1.vm.hostname = "docker1"
-    docker1.vm.network "private_network", ip: "192.168.10.100"
+    docker1.vm.network "private_network", ip: "192.168.100.10"
   end
 
   config.vm.define "docker2" do |docker2|
     docker2.vm.hostname = "docker2"
-    docker2.vm.network "private_network", ip: "192.168.10.101"
+    docker2.vm.network "private_network", ip: "192.168.100.11"
   end
 
   config.vm.provision "ansible_local" do |ansible|
