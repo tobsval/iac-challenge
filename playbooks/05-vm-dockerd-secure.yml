@@ -1,6 +1,7 @@
 ---
 - name: Take necessary steps to secure dockerd
   hosts: all
+  become: true
   gather_facts: false
   tasks:
   - name: Install PyOpenSSL
@@ -15,4 +16,15 @@
     community.crypto.openssl_publickey:
       path: /etc/ssl/docker-ca-pub.pem
       privatekey_path: /etc/ssl/docker-ca-priv.pem
-      cipher: aes256
+
+  - name: Generate server private key (4096 bits, RSA)
+    community.crypto.openssl_privatekey:
+      path: /etc/ssl/docker-srv-priv.pem
+
+  #- name: Generate OpenSSL cert sign request
+  #  community.crypto.openssl_csr:
+  #    path: /etc/ssl/docker-server.csr
+  #    privatekey_path: /etc/ssl/docker-srv-priv.pem
+  #    common_name: #TODO: Add IP addr
+
+  #- debug: var=hostvars[inventory_hostname][ansible_eth1][ipv4][address]

@@ -1,0 +1,16 @@
+---
+- name: Run docker daemon
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Obtain IPv4 address of VM
+    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
+    register: out
+    changed_when: "out.rc != 2"
+
+  - name: Start dockerd (TLS - Port 2376)
+    command: "dockerd -H tcp://{{ out.stdout }}:2376"
+    changed_when: "out.rc != 2"
+
+  - debug: var=out.stdout
