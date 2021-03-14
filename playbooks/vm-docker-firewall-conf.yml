@@ -32,3 +32,4 @@
   - name: Output ufw rules as a visual recap
     command: echo $(ufw status)
     register: out
+    changed_when: "cmd_res.rc != 2"

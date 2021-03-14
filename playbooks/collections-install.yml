@@ -5,3 +5,4 @@
   - name: Install collections/requirements.yml
     shell: ansible-galaxy install -r collectons/requirements.yml
     register: cmd_res
+    changed_when: "cmd_res.rc != 2"
