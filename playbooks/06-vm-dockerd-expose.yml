@@ -10,7 +10,5 @@
     changed_when: "out.rc != 2"
 
   - name: Start dockerd (TLS - Port 2376)
-    command: "dockerd -H tcp://{{ out.stdout }}:2376  &> /var/log/dockerd.log &"
+    shell: "dockerd -H tcp://{{ out.stdout }}:2376 &> /var/log/dockerd.log &"
     changed_when: "out.rc != 2"
-
-  - debug: var=out.stdout
