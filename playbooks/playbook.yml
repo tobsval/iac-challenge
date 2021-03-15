@@ -1,5 +1,5 @@
 ---
-  - import_playbook: 02-vm-disk-check.yml
+  - import_playbook: 02-vm-disk-config.yml
   - import_playbook: 03-vm-docker-install.yml
   - import_playbook: 04-vm-firewall-conf.yml
   - import_playbook: 05-vm-dockerd-secure.yml

@@ -1,0 +1,55 @@
+---
+# Unable to perform any kind of FS shrinking as the CentOS 7 box uses xfs
+# TODO: Find a way to add a secondary storage volume for docker / extend virtual disk
+- name: VM disk checks
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Get main block device size
+    shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB 2>/dev/null
+    register: parted_cmd_res
+    changed_when: "parted_cmd_res.rc != 2"
+
+  - name: Block device size check (Fail if under 40GB)
+    fail:
+      msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile \
+            (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's GUI"
+    when: parted_cmd_res.stdout < 40
+
+  - name: Creating secondary partition dedicated to docker
+    parted:
+      device: /dev/sda
+      number: 2
+      state: present
+
+  #- name: Reboot VM to pick up new partition
+  #  shell: "sleep 5 && reboot"
+  #  async: 1
+  #  poll: 0
+
+  #- name: Awaiting VM to boot up...
+  #  wait_for_connection:
+  #    connect_timeout: 20
+  #    sleep: 5
+  #    delay: 5
+  #    timeout: 300
+
+  - name: Formatting secondary partition (ext4)
+    filesystem:
+      fstype: ext4
+      dev: /dev/sda2
+
+  - name: Mounting new partition as /docker
+    mount:
+      fstype: ext4
+      src: /dev/sda2
+      path: /docker
+      state: mounted
+
+  - name: Outputting partition table:
+    command: fdisk -l
+    register: fdisk_cmd_res
+    changed_when: "fdisk_cmd_res.rc != 2"
+
+  - debug: fdisk_cmd_res.stdout

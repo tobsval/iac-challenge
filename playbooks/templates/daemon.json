@@ -1,5 +1,6 @@
 {
   "debug": true,
   "hosts": ["unix:///var/run/docker.sock","tcp://{{ out.stdout }}:2376"],
-  "storage-driver": "overlay2"
+  "storage-driver": "overlay2",
+  "data-root": "/docker"
 }
