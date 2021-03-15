@@ -16,8 +16,8 @@
       mode: '0644'
 
   - name: Add custom unit file for docker service
-    file:
-      src: files/docker.service
+    template:
+      src: docker.service
       dest: /lib/systemd/system
       mode: '0644'
       owner: root
