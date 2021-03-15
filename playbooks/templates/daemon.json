@@ -1,5 +1,5 @@
 {
   "debug": true,
-  "hosts": ["fd://","unix:///var/run/docker.sock","tcp://{{ out.stdout }}:2376"]
+  "hosts": ["unix:///var/run/docker.sock","tcp://{{ out.stdout }}:2376"],
   "storage-driver": "overlay2"
 }
