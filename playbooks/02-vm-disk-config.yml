@@ -22,18 +22,8 @@
       device: /dev/sda
       number: 2
       state: present
-
-  #- name: Reboot VM to pick up new partition
-  #  shell: "sleep 5 && reboot"
-  #  async: 1
-  #  poll: 0
-
-  #- name: Awaiting VM to boot up...
-  #  wait_for_connection:
-  #    connect_timeout: 20
-  #    sleep: 5
-  #    delay: 5
-  #    timeout: 300
+      fs_type: ext4
+      part_start: -10GiB
 
   - name: Formatting secondary partition (ext4)
     filesystem:
@@ -47,9 +37,9 @@
       path: /docker
       state: mounted
 
-  - name: Outputting partition table:
+  - name: Outputting partition table as a visual recap
     command: fdisk -l
     register: fdisk_cmd_res
     changed_when: "fdisk_cmd_res.rc != 2"
 
-  - debug: fdisk_cmd_res.stdout
+  - debug: var=fdisk_cmd_res.stdout_lines
