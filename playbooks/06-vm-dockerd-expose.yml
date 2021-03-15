@@ -15,6 +15,14 @@
       state: directory
       mode: '0644'
 
+  - name: Add custom unit file for docker service
+    file:
+      src: files/docker.service
+      dest: /lib/systemd/system
+      mode: '0644'
+      owner: root
+      group: root
+
   - name: Add docker daemon config file in /etc/docker
     template:
       src: daemon.json
