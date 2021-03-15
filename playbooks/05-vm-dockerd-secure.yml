@@ -44,3 +44,4 @@
     template:
       src: extfile-srv.cnf
       dest: /etc/ssl
+      mode: '0777'
