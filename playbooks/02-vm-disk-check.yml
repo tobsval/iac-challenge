@@ -1,15 +1,11 @@
 ---
 # Unable to perform any kind of FS shrinking as the CentOS 7 box uses xfs
-# Add dedicated logial volume assigned as storage space to docker
+# TODO: Find a way to add a secondary storage volume for docker / extend virtual disk
 - name: VM disk checks
   hosts: all
   gather_facts: false
+  become: true
   tasks:
-  - name: Install lvm package
-    yum:
-      name: lvm
-      state: present
-
   - name: Get main block device size
     shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB 2>/dev/null
     register: parted_cmd_res
