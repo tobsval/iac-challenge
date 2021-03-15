@@ -1,0 +1,4 @@
+{
+  "debug": true,
+  "hosts": ["tcp://{{ out.stdout }}:2376"]
+}

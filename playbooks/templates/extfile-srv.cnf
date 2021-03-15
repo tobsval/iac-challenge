@@ -1,0 +1,2 @@
+subjectAltName = DNS:{{ hostname_out.stdout }},IP:{{ out.stdout }},IP:127.0.0.1
+extendedKeyUsage = serverAuth

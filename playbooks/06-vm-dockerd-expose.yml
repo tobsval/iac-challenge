@@ -1,5 +1,5 @@
 ---
-- name: Run docker daemon
+- name: Docker daemon config file creation and service start
   hosts: all
   become: true
   gather_facts: false
@@ -9,6 +9,20 @@
     register: out
     changed_when: "out.rc != 2"
 
-  - name: Start dockerd (TLS - Port 2376)
-    shell: "dockerd -H tcp://{{ out.stdout }}:2376 &> /var/log/dockerd.log &"
-    changed_when: "out.rc != 2"
+  - name: Create /etc/docker
+    file:
+      path: /etc/docker
+      state: directory
+      mode: '0644'
+
+  - name: Add docker daemon config file in /etc/docker
+    template:
+      src: daemon.json
+      dest: /etc/docker
+      mode: '0644'
+
+  - name: Ensure docker deamon is running
+    service:
+      name: docker
+      enabled: yes
+      state: started
