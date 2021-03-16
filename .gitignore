@@ -1,2 +1,4 @@
 # General
 .vagrant/
+playbooks/templates/tls-certs/client
+playbooks/templates/tls-certs/server

@@ -5,43 +5,42 @@
   become: true
   gather_facts: false
   tasks:
-  # Setup tasks
-  - name: Install PyOpenSSL
-    pip:
-      name: PyOpenSSL==20.0.1
-
-  - name: Obtain IPv4 address of VM
-    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
-    register: ipv4_out
-    changed_when: "ipv4_out.rc != 2"
-
   - name: Obtain VM Hostname
     command: "hostname"
     register: hostname_out
     changed_when: "hostname_out.rc != 2"
 
-  # Crypto tasks
-  - name: Generate CA private key (4096 bits, RSA)
-    community.crypto.openssl_privatekey:
-      path: /etc/ssl/docker-ca-priv.pem
+  - name: Create /docker/ssl
+    file:
+      path: /docker/ssl
+      state: directory
+      mode: '0644'
 
-  - name: Generate CA public key (4096 bits, RSA)
-    community.crypto.openssl_publickey:
-      path: /etc/ssl/docker-ca-pub.pem
-      privatekey_path: /etc/ssl/docker-ca-priv.pem
+  - name: Create $HOME/.docker
+    file:
+      path: $HOME/.docker
+      state: directory
+      mode: '0644'
 
-  - name: Generate server private key (4096 bits, RSA)
-    community.crypto.openssl_privatekey:
-      path: /etc/ssl/docker-srv-priv.pem
-
-  - name: Generate OpenSSL cert sign request
-    community.crypto.openssl_csr:
-      path: /etc/ssl/docker-server.csr
-      privatekey_path: /etc/ssl/docker-srv-priv.pem
-      common_name: "{{ out.stdout }}"
-
-  - name: Add extfile
+  - name: Include server TLS certs
     template:
-      src: extfile-srv.cnf
-      dest: /etc/ssl
-      mode: '0777'
+      src: "{{ item.src }}"
+      dest: /docker/ssl/{{ item.dest }}
+      mode: '0400'
+    loop:
+      - { src: '../templates/tls-certs/server/ca.pem', dest: 'ca.pem'}
+      - { src: '../templates/tls-certs/server/ca-key.pem', dest: 'ca-key.pem'}
+      - { src: '../templates/tls-certs/server/server-key.pem', dest: 'server-key.pem'}
+      - { src: '../templates/tls-certs/server/server-cert.pem', dest: 'server-cert.pem'}
+    when: hostname_out.stdout == 'docker1'
+
+  - name: Include client TLS certs
+    template:
+      src: "{{ item.src }}"
+      dest: $HOME/.docker/{{ item.dest }}
+      mode: '0400'
+    loop:
+      - { src: '../templates/tls-certs/client/ca.pem', dest: 'ca.pem'}
+      - { src: '../templates/tls-certs/client/key.pem', dest: 'key.pem'}
+      - { src: '../templates/tls-certs/client/cert.pem', dest: 'cert.pem'}
+    when: hostname_out.stdout != 'docker1'

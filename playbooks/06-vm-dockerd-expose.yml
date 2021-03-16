@@ -1,34 +1,49 @@
 ---
 - name: Docker daemon config file creation and service start
   hosts: all
-  become: true
   gather_facts: false
+  become: true
   tasks:
   - name: Obtain IPv4 address of VM
     shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
     register: out
     changed_when: "out.rc != 2"
 
-  - name: Create /etc/docker
-    file:
-      path: /etc/docker
-      state: directory
-      mode: '0644'
+  - name: Obtain VM Hostname
+    command: "hostname"
+    register: hostname_out
+    changed_when: "hostname_out.rc != 2"
 
-  - name: Add custom unit file for docker service
+  # Server Config
+  - name: Add custom unit file for docker server
     template:
       src: docker.service
       dest: /lib/systemd/system
       mode: '0644'
       owner: root
       group: root
+    when: hostname_out.stdout == 'docker1'
+
+  - name: Create /etc/docker
+    file:
+      path: /etc/docker
+      state: directory
+      mode: '0644'
+    when: hostname_out.stdout == 'docker1'
 
   - name: Add docker daemon config file in /etc/docker
     template:
       src: daemon.json
       dest: /etc/docker
       mode: '0644'
+    when: hostname_out.stdout == 'docker1'
 
+  # Client Config
+  - name: Secure docker client connections by default
+    shell: export DOCKER_TLS_VERIFY=1
+    when: hostname_out.stdout != 'docker1'
+
+  # Common
   - name: Ensure docker deamon is running
     service:
       name: docker
