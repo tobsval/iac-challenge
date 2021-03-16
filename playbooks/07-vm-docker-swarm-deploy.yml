@@ -22,6 +22,6 @@
   - name: Initialize new swarm on docker1
     community.docker.docker_swarm:
       state: present
-      listen_addr: {{ out.stdout }}:2377
-      advertise_addr: {{ out.stdout }}
+      listen_addr: "{{ out.stdout }}:2377"
+      advertise_addr: "{{ out.stdout }}"
     when: hostname_out.stdout == 'docker1'
