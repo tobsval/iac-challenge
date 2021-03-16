@@ -4,4 +4,5 @@
   - import_playbook: 04-vm-firewall-conf.yml
   - import_playbook: 05-vm-docker-secure.yml
   - import_playbook: 06-vm-dockerd-expose.yml
-  - import_playbook: 07-vm-docker-swarm-deploy.yml
+  - import_playbook: 07-vm-docker-swarm-manager-deploy.yml
+  - import_playbook: 08-vm-docker-swarm-worker-deploy.yml
