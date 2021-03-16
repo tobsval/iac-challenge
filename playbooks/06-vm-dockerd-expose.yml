@@ -28,7 +28,7 @@
 
   - name: Add docker daemon config file in /etc/docker
     template:
-      src: ../templates/daemon.json
+      src: daemon.json
       dest: /etc/docker
       mode: '0644'
     when: hostname_out.stdout == 'docker1'
