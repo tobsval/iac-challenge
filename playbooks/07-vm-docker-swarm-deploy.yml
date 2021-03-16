@@ -16,7 +16,7 @@
 
   # Swarm manager config
   - name: Specify docker server cert path
-    command: export DOCKER_CERT_PATH=/docker/ssl && echo $DOCKER_TLS_VERIFY
+    shell: export DOCKER_CERT_PATH=/docker/ssl && echo $DOCKER_TLS_VERIFY
     when: hostname_out.stdout == 'docker1'
 
   - name: Initialize new swarm on docker1
