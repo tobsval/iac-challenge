@@ -22,6 +22,7 @@
       state: directory
       mode: '0644'
 
+  # Server certs config
   - name: Include server TLS certs
     template:
       src: "{{ item.src }}"
@@ -34,6 +35,7 @@
       - { src: '../templates/tls-certs/server/server-cert.pem', dest: 'server-cert.pem'}
     when: hostname_out.stdout == 'docker1'
 
+  # Client certs config
   - name: Include client TLS certs
     template:
       src: "{{ item.src }}"
