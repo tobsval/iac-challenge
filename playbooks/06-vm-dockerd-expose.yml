@@ -40,7 +40,7 @@
 
   # Client Config
   - name: Secure docker client connections by default
-    shell: export DOCKER_TLS_VERIFY=1
+    command: export DOCKER_TLS_VERIFY=1 && echo $DOCKER_TLS_VERIFY
     when: hostname_out.stdout != 'docker1'
 
   # Common
