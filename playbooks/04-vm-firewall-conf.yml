@@ -16,16 +16,23 @@
       enablerepo: epel
 
   - name: Enable ufw
-    community.general.ufw: state=enabled
+    community.general.ufw:
+      state: enabled
 
   - name: Disable default allow input rule
-    community.general.ufw: direction=incoming policy=deny
+    community.general.ufw:
+      direction: incoming
+      policy: deny
 
   - name: Allow incoming SSH connections
-    community.general.ufw: rule=limit port=22 proto=tcp
+    community.general.ufw:
+      rule: limit
+      port: '22'
+      proto: tcp
 
   - name: Enable firewall logging and restart ufw
-    community.general.ufw: logging=on
+    community.general.ufw:
+      logging: 'on'
     notify:
       - restart ufw
 

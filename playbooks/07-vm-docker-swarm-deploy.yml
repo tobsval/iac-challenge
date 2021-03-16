@@ -3,6 +3,8 @@
   hosts: all
   gather_facts: false
   become: true
+  vars:
+    - swarm_worker_join_token: null
   tasks:
   - name: Install docker API manager python wrapper
     pip:
@@ -27,11 +29,16 @@
     register: swarm_init_out
     when: hostname_out.stdout == 'docker1'
 
+  - name: Register swarm worker join token
+    set_fact:
+      swarm_worker_join_token: "{{ swarm_init_out.swarm_facts.JoinTokens.Worker }}"
+    when: hostname_out.stdout == 'docker1'
+
   # Join swarm nodes
   - name: Add worker node to swarm
     community.general.docker_swarm:
       state: join
-      join_token: "{{ swarm_init_out.JoinTokens.Worker }}"
-      remote_addrs: "{{ swarm_manager_ipv4_out }}:2377"
-      advertise_addr: "{{ swarm_manager_ipv4_out }}"
+      join_token: "{{ swarm_worker_join_token }}"
+      remote_addrs: ["{{ swarm_manager_ipv4_out }}:2377"]
+      advertise_addr: "{{ ipv4_out.stdout }}"
     when: hostname_out.stdout != 'docker1'
