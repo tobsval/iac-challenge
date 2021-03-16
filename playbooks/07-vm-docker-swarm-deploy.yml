@@ -41,6 +41,8 @@
       host: "{{ swarm_manager_ipv4.stdout }}"
       port: 2377
       state: started
+      connect_timeout: 5
+      timeout: 60
     when: hostname_out.stdout != 'docker1'
 
   - name: Add worker node to swarm
