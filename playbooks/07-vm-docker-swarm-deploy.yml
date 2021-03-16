@@ -4,14 +4,34 @@
   gather_facts: false
   become: true
   tasks:
+  - name: Install docker API manager python wrapper
+    pip:
+      name: docker==4.4.4
+
   # Swarm manager config
   - name: Specify docker server cert path
     shell: export DOCKER_CERT_PATH=/docker/ssl && echo $DOCKER_TLS_VERIFY
     when: hostname_out.stdout == 'docker1'
 
+  - name: Get swarm manager IPv4 address
+    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
+    register: swarm_manager_ipv4_out
+    changed_when: "swarm_manager_ipv4_out.rc != 2"
+    when: hostname_out.stdout == 'docker1'
+
   - name: Initialize new swarm on docker1
     community.general.docker_swarm:
       state: present
-      listen_addr: "{{ ipv4_out.stdout }}:2377"
-      advertise_addr: "{{ ipv4_out.stdout }}"
+      listen_addr: "{{ swarm_manager_ipv4_out.stdout }}:2377"
+      advertise_addr: "{{ swarm_manager_ipv4_out.stdout }}"
+    register: swarm_init_out
     when: hostname_out.stdout == 'docker1'
+
+  # Join swarm nodes
+  - name: Add worker node to swarm
+    community.general.docker_swarm:
+      state: join
+      join_token: "{{ swarm_init_out.JoinTokens.Worker }}"
+      remote_addrs: "{{ swarm_manager_ipv4_out }}:2377"
+      advertise_addr: "{{ swarm_manager_ipv4_out }}"
+    when: hostname_out.stdout != 'docker1'
