@@ -16,7 +16,7 @@
       enablerepo: epel
 
   - name: Enable ufw
-    community.general.ufw: state=enabled policy=allow
+    community.general.ufw: state=enabled
 
   - name: Disable default allow input rule
     community.general.ufw: direction=incoming policy=deny
