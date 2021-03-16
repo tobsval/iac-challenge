@@ -1,11 +1,5 @@
 collections:
   - name: community.general.ufw
     source: https://galaxy.ansible.com
-  - name: community.crypto.openssl_privatekey
-    source: https://galaxy.ansible.com
-  - name: community.crypto.openssl_publickey
-    source: https://galaxy.ansible.com
-  - name: community.crypto.openssl_csr
-    source: https://galaxy.ansible.com
-  - name: community.crypto.x509_certificate
+  - name: community.docker.docker_swarm
     source: https://galaxy.ansible.com
