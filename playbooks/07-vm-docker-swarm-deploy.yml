@@ -19,7 +19,7 @@
     changed_when: "swarm_manager_ipv4_out.rc != 2"
     when: hostname_out.stdout == 'docker1'
 
-  - name: Initialize new swarm on docker1
+  - name: Initialize new swarm with docker1 as swarm manager
     community.general.docker_swarm:
       state: present
       listen_addr: "{{ swarm_manager_ipv4_out.stdout }}:2377"

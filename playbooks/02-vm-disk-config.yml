@@ -6,14 +6,14 @@
   tasks:
   - name: Get main block device size
     shell: set -o pipefail && parted -l | grep GB | awk '{ print $3 }' | head -n1 | tr -d GB 2>/dev/null
-    register: parted_cmd_res
-    changed_when: "parted_cmd_res.rc != 2"
+    register: parted_out
+    changed_when: "parted_out.rc != 2"
 
   - name: Block device size check (Fail if under 40GB)
     fail:
       msg: "VM's disk is under 40GB, consider increasing it in your Vagrantfile \
             (https://github.com/sprotheroe/vagrant-disksize) or via your hypervisor's GUI"
-    when: parted_cmd_res.stdout < 40
+    when: parted_out.stdout < 40
 
   - name: Creating secondary partition dedicated to docker
     parted:
@@ -37,7 +37,7 @@
 
   - name: Outputting partition table as a visual recap
     command: fdisk -l
-    register: fdisk_cmd_res
-    changed_when: "fdisk_cmd_res.rc != 2"
+    register: fdisk_out
+    changed_when: "fdisk_out.rc != 2"
 
-  - debug: var=fdisk_cmd_res.stdout_lines
+  - debug: var=fdisk_out.stdout_lines
