@@ -1,6 +1,4 @@
 ---
-# Unable to perform any kind of FS shrinking as the CentOS 7 box uses xfs
-# TODO: Find a way to add a secondary storage volume for docker / extend virtual disk
 - name: VM disk checks
   hosts: all
   gather_facts: false
@@ -23,7 +21,7 @@
       number: 2
       state: present
       fs_type: ext4
-      part_start: -10GiB
+      part_start: -10GiB # TODO: Improve this not to be fixed but to use all the remaining space on disk
 
   - name: Formatting secondary partition (ext4)
     filesystem:
