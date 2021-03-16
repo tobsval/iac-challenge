@@ -11,8 +11,8 @@
 
   - name: Obtain IPv4 address of VM
     shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
-    register: out
-    changed_when: "out.rc != 2"
+    register: ipv4_out
+    changed_when: "ipv4_out.rc != 2"
 
   # Swarm manager config
   - name: Specify docker server cert path

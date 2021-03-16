@@ -4,11 +4,6 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Obtain IPv4 address of VM
-    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
-    register: out
-    changed_when: "out.rc != 2"
-
   - name: Obtain VM Hostname
     command: "hostname"
     register: hostname_out
@@ -33,14 +28,14 @@
 
   - name: Add docker daemon config file in /etc/docker
     template:
-      src: daemon.json
+      src: ../templates/daemon.json
       dest: /etc/docker
       mode: '0644'
     when: hostname_out.stdout == 'docker1'
 
   # Client Config
   - name: Secure docker client connections by default
-    command: export DOCKER_TLS_VERIFY=1 && echo $DOCKER_TLS_VERIFY
+    shell: export DOCKER_TLS_VERIFY=1 && echo $DOCKER_TLS_VERIFY
     when: hostname_out.stdout != 'docker1'
 
   # Common

@@ -2,6 +2,6 @@
   - import_playbook: 02-vm-disk-config.yml
   - import_playbook: 03-vm-docker-install.yml
   - import_playbook: 04-vm-firewall-conf.yml
-  - import_playbook: 05-vm-dockerd-secure.yml
+  - import_playbook: 05-vm-docker-secure.yml
   - import_playbook: 06-vm-dockerd-expose.yml
-  #- import_playbook: 07-vm-docker-swarm-deploy.yml
+  - import_playbook: 07-vm-docker-swarm-deploy.yml
