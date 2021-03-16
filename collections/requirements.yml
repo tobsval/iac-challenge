@@ -1,5 +1,5 @@
 collections:
   - name: community.general.ufw
     source: https://galaxy.ansible.com
-  - name: community.docker.docker_swarm
+  - name: community.general.docker_swarm
     source: https://galaxy.ansible.com
