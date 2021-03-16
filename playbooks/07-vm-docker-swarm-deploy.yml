@@ -4,16 +4,6 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Obtain VM Hostname
-    command: "hostname"
-    register: hostname_out
-    changed_when: "hostname_out.rc != 2"
-
-  - name: Obtain IPv4 address of VM
-    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
-    register: ipv4_out
-    changed_when: "ipv4_out.rc != 2"
-
   # Swarm manager config
   - name: Specify docker server cert path
     shell: export DOCKER_CERT_PATH=/docker/ssl && echo $DOCKER_TLS_VERIFY
@@ -22,6 +12,6 @@
   - name: Initialize new swarm on docker1
     community.general.docker_swarm:
       state: present
-      listen_addr: "{{ out.stdout }}:2377"
-      advertise_addr: "{{ out.stdout }}"
+      listen_addr: "{{ ipv4_out.stdout }}:2377"
+      advertise_addr: "{{ ipv4_out.stdout }}"
     when: hostname_out.stdout == 'docker1'

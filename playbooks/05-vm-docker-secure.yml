@@ -10,6 +10,11 @@
     register: hostname_out
     changed_when: "hostname_out.rc != 2"
 
+  - name: Obtain IPv4 address of VM
+    shell: "set -o pipefail && ip addr | grep 192 | awk '{print $2}' | sed 's/...$//'"
+    register: ipv4_out
+    changed_when: "ipv4_out.rc != 2"
+
   - name: Create /docker/ssl
     file:
       path: /docker/ssl

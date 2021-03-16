@@ -37,7 +37,7 @@
 
   - name: Output ufw rules as a visual recap
     command: ufw status
-    register: out
-    changed_when: "out.rc != 2"
+    register: fw_out
+    changed_when: "fw_out.rc != 2"
 
-  - debug: var=out.stdout_lines
+  - debug: var=fw_out.stdout_lines
