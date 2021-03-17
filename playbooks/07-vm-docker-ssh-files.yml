@@ -5,10 +5,10 @@
   become: true
   tasks:
   - name: Create .ssh directory in /root
-      file:
-        path: /root/.ssh
-        state: directory
-        mode: '0700'
+    file:
+      path: /root/.ssh
+      state: directory
+      mode: '0700'
 
   - name: Include private SSH key
     template:
