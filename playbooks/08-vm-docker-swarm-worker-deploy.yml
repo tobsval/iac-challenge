@@ -15,16 +15,12 @@
 
   # TODO: Rethink approach to this - find a way to not hardcode manager IP addr - Ansible inventory?
   - name: Retrieve token via SSH
-    shell: set -o pipefail && ssh vagrant@192.168.100.10 -i /tmp/privkey sudo docker swarm join-token worker \
-           | awk '{print $5}' > /tmp/token
-    when: hostname_out.stdout != 'docker1'
-
-  - name: Register worker join token
-    command: cat /tmp/token
+    shell: set -o pipefail && sudo ssh vagrant@192.168.100.10 -i /tmp/privkey sudo docker swarm join-token worker \
+           | sed -n 3p | awk '{print $5}'
     register: token_out
-    changed_when: "token_out.rc != 2"
     when: hostname_out.stdout != 'docker1'
 
+  # TODO: Rethink approach to this - find a way to not hardcode manager IP addr - Ansible inventory?
   # Join swarm nodes
   - name: Add worker node to swarm
     community.general.docker_swarm:
