@@ -6,3 +6,5 @@
   - import_playbook: 06-vm-dockerd-expose.yml
   - import_playbook: 07-vm-docker-swarm-manager-deploy.yml
   - import_playbook: 08-vm-docker-swarm-worker-deploy.yml
+
+# TODO: Add ansible inventory eventually
