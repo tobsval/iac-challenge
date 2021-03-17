@@ -4,11 +4,6 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Obtain VM Hostname
-    command: "hostname"
-    register: hostname_out
-    changed_when: "hostname_out.rc != 2"
-
   # Server Config
   - name: Add custom unit file for docker server
     template:

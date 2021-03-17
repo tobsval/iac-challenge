@@ -1,5 +1,5 @@
 ---
-- name: Configure docker
+- name: Install docker
   hosts: all
   become: true
   gather_facts: false

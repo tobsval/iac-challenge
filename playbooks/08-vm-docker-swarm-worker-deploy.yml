@@ -4,10 +4,9 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Copy worker join token from swarm manager through SSH
-    command: ssh -i /root/.ssh/id_rsa.pub root@192.168.100.10 docker swarm join-token -q worker
+  - name: Copy worker join token from swarm manager through docker
+    command: docker --tlsverify -H 192.168.100.10:2376 swarm join-token worker -q
     register: worker_token_out
-    become_user: root
     when: hostname_out.stdout != 'docker1'
 
   - name: Join swarm worker

@@ -8,7 +8,6 @@
     pip:
       name: docker==4.4.4
 
-  # Swarm manager config
   - name: Specify docker server cert path
     shell: export DOCKER_CERT_PATH=/docker/ssl && echo $DOCKER_CERT_PATH
     when: hostname_out.stdout == 'docker1'
