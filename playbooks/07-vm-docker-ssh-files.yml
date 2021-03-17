@@ -15,10 +15,9 @@
       src: ssh-keys/id_rsa
       dest: /root/.ssh/id_rsa
       mode: '0600'
-    when: hostname_out.stdout == 'docker1'
 
   - name: Include public SSH key
     template:
       src: ssh-keys/id_rsa.pub
       dest: /root/.ssh/id_rsa.pub
-      mode: '0644'
+      mode: '0600'
