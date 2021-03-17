@@ -1,5 +1,4 @@
 # General
 .vagrant/
-playbooks/templates/tls-certs/client
-playbooks/templates/tls-certs/server
-playbooks/templates/ssh-keys
+playbooks/templates/tls-certs/client/*.pem
+playbooks/templates/tls-certs/server/*.pem
