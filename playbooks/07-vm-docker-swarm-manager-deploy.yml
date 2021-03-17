@@ -1,5 +1,5 @@
 ---
-- name: Docker swarm deploy
+- name: Docker swarm manager deploy
   hosts: all
   gather_facts: false
   become: true
@@ -20,14 +20,3 @@
       advertise_addr: "{{ ipv4_out.stdout }}"
     register: swarm_init_out
     when: hostname_out.stdout == 'docker1'
-
-  - debug: var=swarm_init_out.swarm_facts.JoinTokens.Worker
-
-  # Join swarm nodes
-  #- name: Add worker node to swarm
-  #  community.general.docker_swarm:
-  #    state: join
-  #    join_token: "{{ swarm_worker_join_token }}"
-  #    remote_addrs: ["{{ swarm_manager_ipv4 }}:2377"]
-  #    advertise_addr: "{{ ipv4_out.stdout }}"
-  #  when: hostname_out.stdout != 'docker1'

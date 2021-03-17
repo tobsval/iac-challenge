@@ -1,0 +1,32 @@
+---
+- name: Docker swarm worker deploy
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  # TODO: Rethink approach to this - find a way to share join token through Ansible
+  # Retrieve worker join token
+  - name: Temporarily include SSH key to SSH to swarm manager
+    template:
+      src: "../templates/ssh-keys/private-key"
+      dest: /tmp/privkey.pem
+      mode: '0400'
+    when: hostname_out.stdout != 'docker1'
+
+  # TODO: Rethink approach to this - find a way to not hardcode manager IP addr - Ansible inventory?
+  - name: Retrieve token via SSH
+    shell: ssh vagrant@192.168.100.10 -i /tmp/privkey sudo docker swarm join-token worker \
+           | awk '{print $5}' > /tmp/token
+
+  - name: Register worker join token
+    command: cat /tmp/token
+    register: token_out
+
+  # Join swarm nodes
+  - name: Add worker node to swarm
+    community.general.docker_swarm:
+      state: join
+      join_token: "{{ token_out.stdout }}"
+      remote_addrs: ["192.168.100.10:2377"]
+      advertise_addr: "{{ ipv4_out.stdout }}"
+    when: hostname_out.stdout != 'docker1'

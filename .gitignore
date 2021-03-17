@@ -2,3 +2,4 @@
 .vagrant/
 playbooks/templates/tls-certs/client
 playbooks/templates/tls-certs/server
+playbooks/templates/ssh-keys
