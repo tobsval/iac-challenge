@@ -27,6 +27,7 @@
       state: directory
       mode: '0644'
 
+  # TODO: Maybe find a way to generate certs on the machines directly instead of provisioning them from the local machine
   # Server certs config
   - name: Include server TLS certs
     template:
