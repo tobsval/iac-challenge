@@ -8,8 +8,8 @@
   # Retrieve worker join token
   - name: Temporarily include SSH key to SSH to swarm manager
     template:
-      src: "ssh-keys/private-key"
-      dest: /tmp/privkey.pem
+      src: "ssh-keys/private-key.txt"
+      dest: /tmp/privkey
       mode: '0400'
     when: hostname_out.stdout != 'docker1'
 
