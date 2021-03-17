@@ -1,0 +1,24 @@
+---
+- name: Include needed SSH keys on docker VMs
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Create .ssh directory in /root
+      file:
+        path: /root/.ssh
+        state: directory
+        mode: '0700'
+
+  - name: Include private SSH key
+    template:
+      src: ssh-keys/id_rsa
+      dest: /root/.ssh/id_rsa
+      mode: '0600'
+    when: hostname_out.stdout == 'docker1'
+
+  - name: Include public SSH key
+    template:
+      src: ssh-keys/id_rsa.pub
+      dest: /root/.ssh/id_rsa.pub
+      mode: '0644'

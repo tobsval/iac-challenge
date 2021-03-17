@@ -18,5 +18,4 @@
       state: present
       listen_addr: "{{ ipv4_out.stdout }}:2377"
       advertise_addr: "{{ ipv4_out.stdout }}"
-    register: swarm_init_out
     when: hostname_out.stdout == 'docker1'

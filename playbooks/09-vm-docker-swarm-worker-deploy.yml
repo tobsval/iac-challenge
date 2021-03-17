@@ -1,0 +1,18 @@
+---
+- name: Docker swarm worker deploy
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Copy worker join token from swarm manager through SSH
+    shell: sudo ssh -i /root/.ssh/id_rsa.pub root@192.168.100.10 docker swarm join-token -q worker
+    register: worker_token_out
+    when: hostname_out.stdout != 'docker1'
+
+  - name: Join swarm worker
+    community.general.docker_swarm:
+      state: join
+      join_token: "{{ worker_token_out.stdout }}"
+      remote_addrs: ["192.168.100.10:2377"]
+      advertise_addr: "{{ ipv4_out.stdout }}"
+    when: hostname_out.stdout != 'docker1'
